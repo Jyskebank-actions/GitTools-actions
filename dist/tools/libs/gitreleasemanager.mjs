@@ -114,8 +114,10 @@ var GitReleaseManagerTool = class extends DotnetTool {
 		if (settings.milestone) builder.addKeyValue("milestone", settings.milestone);
 		if (settings.name) builder.addKeyValue("name", settings.name);
 		if (settings.targetcommitish) builder.addKeyValue("targetcommitish", settings.targetcommitish);
-		if (settings.inputFilePath) if (await this.buildAgent.fileExists(settings.inputFilePath)) builder.addKeyValue("inputFilePath", settings.inputFilePath);
-		else throw new Error(`GitReleaseManager inputFilePath not found at ${settings.inputFilePath}`);
+		if (settings.inputFilePath) {
+			if (await this.buildAgent.fileExists(settings.inputFilePath)) builder.addKeyValue("inputFilePath", settings.inputFilePath);
+			else throw new Error(`GitReleaseManager inputFilePath not found at ${settings.inputFilePath}`);
+		}
 		if (settings.isPreRelease) builder.addFlag("pre");
 		if (settings.assets && settings.assets.length > 0) {
 			settings.assets = settings.assets.map((asset) => {

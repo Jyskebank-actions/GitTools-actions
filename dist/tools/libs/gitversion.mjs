@@ -103,8 +103,10 @@ var GitVersionTool = class extends DotnetTool {
 		const { disableCache, disableNormalization, configFilePath, overrideConfig, updateAssemblyInfo, updateAssemblyInfoFilename, updateProjectFiles, updateWixVersionFile, verbosity } = options;
 		if (disableCache) builder.addArgument("/nocache");
 		if (disableNormalization) builder.addArgument("/nonormalize");
-		if (configFilePath) if (await this.isValidInputFile(workDir, configFilePath)) builder.addArgument("/config").addArgument(configFilePath);
-		else throw new Error(`GitVersion configuration file not found at ${configFilePath}`);
+		if (configFilePath) {
+			if (await this.isValidInputFile(workDir, configFilePath)) builder.addArgument("/config").addArgument(configFilePath);
+			else throw new Error(`GitVersion configuration file not found at ${configFilePath}`);
+		}
 		if (overrideConfig) {
 			const overrideConfigPattern = /^[A-Za-z0-9]+(?:-[A-Za-z]+)*=[^\r\n]+$/;
 			for (let config of overrideConfig) {
@@ -114,8 +116,10 @@ var GitVersionTool = class extends DotnetTool {
 		}
 		if (updateAssemblyInfo) {
 			builder.addArgument("/updateassemblyinfo");
-			if (updateAssemblyInfoFilename) if (await this.isValidInputFile(workDir, updateAssemblyInfoFilename)) builder.addArgument(updateAssemblyInfoFilename);
-			else throw new Error(`AssemblyInfoFilename file not found at ${updateAssemblyInfoFilename}`);
+			if (updateAssemblyInfoFilename) {
+				if (await this.isValidInputFile(workDir, updateAssemblyInfoFilename)) builder.addArgument(updateAssemblyInfoFilename);
+				else throw new Error(`AssemblyInfoFilename file not found at ${updateAssemblyInfoFilename}`);
+			}
 		}
 		if (updateProjectFiles) builder.addArgument("/updateprojectfiles");
 		if (updateWixVersionFile) builder.addArgument("/updatewixversionfile");
